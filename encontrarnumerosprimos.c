@@ -25,7 +25,7 @@ clock_t inicioTempo, fimTempo;
 int main(int argc, char **argv){
     int num_primo;
     int index;
-    int tam =50
+    int tam =50;
     int continua = 1;
     MPI_Status status; //Definindo a variável "status"
     int ierr, my_id, num_procs; //Definições para o paralelismo
