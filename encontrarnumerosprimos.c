@@ -54,7 +54,7 @@ int main(int argc, char **argv){
       int indexBuffer=0;
       int cont = 0;// conadora
       int regcont=tam;// contadora regresiva
-
+      int processo;
       int aux=2;
 
       while(aux<=tam){
@@ -63,6 +63,7 @@ int main(int argc, char **argv){
             for(int i=0; i<sizebuffer; i++){
               numerosenviados[i]=aux++;
             }
+            processo=1;
             ierr = MPI_Send(&continua, 1 , MPI_INT, processo, LOOPING, MPI_COMM_WORLD);//1*
             ierr = MPI_Send(&cont, 1 , MPI_INT, processo, envio_cont, MPI_COMM_WORLD);//2*
             ierr = MPI_Send(&numerosenviados[0], sizebuffer, MPI_INT, 1, envio_vetor_enviados, MPI_COMM_WORLD);//3*
@@ -79,7 +80,7 @@ int main(int argc, char **argv){
             }
             cont++;
         }else{
-          for(int processo=1;processo<num_procs;processo++){
+          for(processo=1;processo<num_procs;processo++){
             ierr = MPI_Send(&continua, 1 , MPI_INT, processo, LOOPING, MPI_COMM_WORLD);
             ierr = MPI_Send(&cont, 1 , MPI_INT, processo, envio_cont, MPI_COMM_WORLD);
             ierr = MPI_Send(&index, 1 , MPI_INT, processo, envio_tamanho, MPI_COMM_WORLD);
@@ -107,10 +108,10 @@ int main(int argc, char **argv){
         }
       }
       int pos;
-      for (pos=0; pos<=ult_primo; pos++)
+      for (pos=0; pos<=index; pos++)
         printf("%d ", primos[pos]);
  	     printf("\n");
- 	     printf("Quantidade de primos encontrados: %d", ult_primo+1);
+ 	     printf("Quantidade de primos encontrados: %d", index);
 
  	     /* Exibindo o tempo gasto na execução da aplicação */
  	     fimTempo= clock();
@@ -129,6 +130,7 @@ int main(int argc, char **argv){
       int num_teste, teste;
       int index_primos;
       int ult_primo=0;
+      int ult_enviado=0;
       int sizebuffer = num_procs-1;
       int vetBuffer[sizebuffer];
       int vetNumEnviados[sizebuffer];
@@ -179,7 +181,7 @@ int main(int argc, char **argv){
       // recebe ultimo primo
       ierr = MPI_Recv( &ult_primo, 1, MPI_INT, proc_raiz, envio_tamanho, MPI_COMM_WORLD, &status);
       teste = num_teste;
-      for(int i =0 i<ult_primo; i++){
+      for(int i =0; i<ult_primo; i++){
         if(teste % 2 != 0 && teste % primos[i] != 0){
             teste=0;
             break;
@@ -189,5 +191,6 @@ int main(int argc, char **argv){
 
     }
   }
+}
     return 0;
 }
